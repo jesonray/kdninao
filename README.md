@@ -43,7 +43,7 @@ Once the extension is installed, simply modify your application configuration as
 return [
     'modules' => [
         'kdniao' => [
-            'class' => 'raysoft\kdniao',
+            'class' => 'raysoft\kdniao\Kdniao',
             'appId' => '商户ID',
             'appKey' => 'APP Key',
         ],

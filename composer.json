@@ -12,5 +12,8 @@
             "email": "jesonray@163.com"
         }
     ],
-    "minimum-stability": "dev"
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {"raysoft\\kdniao\\": ""}
+    }
 }

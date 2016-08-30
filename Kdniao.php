@@ -14,9 +14,9 @@ use yii\base\Object;
 class Kdniao extends Object
 {
     // 商户ID
-    public $appId = '1262974';
+    public $appId;
     // App Key
-    public $appKey = 'b76c4f91-4e4b-4461-bb7f-3c3b740d0e73';
+    public $appKey;
 
     public $apiUrl = 'http://api.kdniao.cc/api/dist';
 

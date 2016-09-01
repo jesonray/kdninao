@@ -53,7 +53,63 @@ class Kdniao extends Object
         return $track;
     }
 
+    /**
+     * 订阅快递信息
+     * @param string $code      快递单号
+     * @param string $shipper   快递公司
+     * @param string $token     识别token, 增强安全性
+     * @return bool
+     */
+    public function subscribe($code, $shipper='', $token='')
+    {
+        if( !$shipper ) {
+            $shippers = $this->shipper($code);
+            if( !$shippers ) {
+                return false;
+            }
 
+            $shipper = $shippers[0]['ShipperCode'];
+        }
+
+        $requestData= "{'CallBack':'{$token}','ShipperCode':'{$shipper}','LogisticCode':'{$code}'}";
+
+        $datas = array(
+            'EBusinessID' => $this->appId,
+            'RequestType' => '1008',
+            'RequestData' => urlencode($requestData) ,
+            'DataType' => '2',
+        );
+
+        $datas['DataSign'] = $this->encrypt($requestData, $this->appKey);
+        $json = $this->httpPost($datas);
+
+        return $json && $json['Success']==true;
+    }
+
+    /**
+     * 解析回调数据
+     * @return Track|bool
+     */
+    public function parseCallback()
+    {
+        $json = json_decode(file_get_contents('php://input'), 1);
+        if( !$json ) {
+            return false;
+        }
+
+        $tracks = [];
+        foreach($json['Data'] as $one) {
+            $tracks[] = new Track($one);
+        }
+
+        return $tracks;
+    }
+
+    /**
+     * 查询快递公司编码
+     * @param $code
+     * @return mixed
+     */
     public function shipper($code)
     {
         $requestData= "{'LogisticCode':'{$code}'}";
@@ -68,6 +124,25 @@ class Kdniao extends Object
         $datas['DataSign'] = $this->encrypt($requestData, $this->appKey);
         $json = $this->httpPost($datas);
         return $json['Shippers'];
+    }
+
+    /**
+     * 返回数据
+     * @param bool $success
+     * @param string $reason
+     */
+    public function response($success, $reason='')
+    {
+        $data = [
+            'EBusinessID' => $this->appId,
+            'UpdateTime' => date('Y-m-d H:i:s'),
+            'Success' => (bool)$success,
+            'Reason' => $reason
+        ];
+
+        ob_clean();
+        echo json_encode($data);
+        die;
     }
 
     /**

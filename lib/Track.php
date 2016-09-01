@@ -34,6 +34,8 @@ class Track extends Object
 
     public $reason;
 
+    public $token;
+
     public function __construct(array $config)
     {
         $tmp = [];
@@ -49,6 +51,11 @@ class Track extends Object
         if (method_exists($this, $setter)) {
             $this->$setter($value);
         }
+    }
+
+    public function setCallBack($value)
+    {
+        $this->token = $value;
     }
 
     public function isReceived()

@@ -41,7 +41,7 @@ Once the extension is installed, simply modify your application configuration as
 
 ```php
 return [
-    'modules' => [
+    'components' => [
         'kdniao' => [
             'class' => 'raysoft\kdniao\Kdniao',
             'appId' => '商户ID',
